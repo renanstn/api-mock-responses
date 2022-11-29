@@ -1,0 +1,21 @@
+services:
+
+  db:
+    container_name: db
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+  app:
+    container_name: app
+    build:
+      context: .
+      target: development
+    depends_on:
+      - db
+    volumes:
+      - .:/code/
+    ports:
+      - "8000:8000"
