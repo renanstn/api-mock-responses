@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "api-mock"
+version = "0.1.0"
+description = ""
+authors = ["Renan Santana <renan_ota@hotmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.88.0"
+uvicorn = "^0.20.0"
+Jinja2 = "^3.1.2"
+SQLAlchemy = "^1.4.44"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
