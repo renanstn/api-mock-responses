@@ -18,7 +18,13 @@ db = SessionLocal()
 
 @app.middleware("http")
 async def get_request_path(request: Request, call_next):
-    if request.url.path.endswith("/html"):
+    """
+    Middleware que intercepta toda request que chega, verifica no banco se já
+    existe um endpoint mocado para ela, e retorna os dados mocados caso exista.
+    Caso não exista, adiciona uma entrada no banco, para que seja possível
+    preencher o restante dos dados na tela de admin.
+    """
+    if request.url.path in ["/admin", "/static/css/custom.css"]:
         response = await call_next(request)
         return response
     else:
@@ -28,8 +34,10 @@ async def get_request_path(request: Request, call_next):
             .first()
         )
         if path:
-            # TODO carregar header e body do banco e retornar
-            response = JSONResponse({"message": "customizada"})
+            # Retorna as informações mocadas
+            response = JSONResponse(
+                path.return_body, headers=path.return_header
+            )
         else:
             # Registrar o novo endpoint
             path_to_create = models.Path(
@@ -44,11 +52,19 @@ async def get_request_path(request: Request, call_next):
         return response
 
 
-@app.get("/")
-async def ping():
-    return {"message": "pong"}
-
-
-@app.get("/html", response_class=HTMLResponse)
+@app.get("/admin", response_class=HTMLResponse)
 async def load_html(request: Request):
-    return templates.TemplateResponse("test.html", {"request": request})
+    paths = db.query(models.Path).all()
+    payload = []
+    for path in paths:
+        payload.append(
+            {
+                "id": path.id,
+                "endpoint": path.endpoint,
+                "return_body": path.return_body,
+                "return_header": path.return_header,
+            }
+        )
+    return templates.TemplateResponse(
+        "admin.html", {"request": request, "payload": payload}
+    )

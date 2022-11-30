@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Mock Responses | Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='css/bulma.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/custom.css') }}">
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="title" title-color="white">API Mock Responses</h1>
+    {% for item in payload %}
+      <div class="card">
+        <div class="card-content">
+          <div class="field">
+            <label class="label">Endpoint</label>
+            <div class="control">
+              <input class="input" type="text" value="{{ item.endpoint }}" disabled>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Header</label>
+            <div class="control">
+              <textarea name="return_header" class="textarea">{{ item.return_header }}</textarea>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Body</label>
+            <div class="control">
+              <textarea name="return_body" class="textarea">{{ item.return_body }}</textarea>
+            </div>
+          </div>
+
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-link">Save</button>
+            </div>
+            <div class="control">
+              <button class="button is-link is-light">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+    {% endfor %}
+  </div>
+</body>
+
+</html>
