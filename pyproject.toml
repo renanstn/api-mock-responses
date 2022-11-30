@@ -10,9 +10,17 @@ fastapi = "^0.88.0"
 uvicorn = "^0.20.0"
 Jinja2 = "^3.1.2"
 SQLAlchemy = "^1.4.44"
+python-decouple = "^3.6"
+psycopg2-binary = "^2.9.5"
 
 [tool.poetry.dev-dependencies]
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.10.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 79
