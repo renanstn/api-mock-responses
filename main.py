@@ -24,13 +24,16 @@ async def get_request_path(request: Request, call_next):
     Caso não exista, adiciona uma entrada no banco, para que seja possível
     preencher o restante dos dados na tela de admin.
     """
-    if request.url.path in ["/admin", "/static/css/custom.css"]:
+    if request.url.path in ["/admin", "/save", "/static/css/custom.css"]:
         response = await call_next(request)
         return response
     else:
         path = (
             db.query(models.Path)
-            .filter(models.Path.endpoint == request.url.path)
+            .filter(
+                models.Path.endpoint == request.url.path,
+                models.Path.method == request.method,
+            )
             .first()
         )
         if path:
@@ -42,6 +45,7 @@ async def get_request_path(request: Request, call_next):
             # Registrar o novo endpoint
             path_to_create = models.Path(
                 endpoint=request.url.path,
+                method=request.method,
                 return_body={},
                 return_header={},
             )
@@ -68,3 +72,8 @@ async def load_html(request: Request):
     return templates.TemplateResponse(
         "admin.html", {"request": request, "payload": payload}
     )
+
+
+@app.post("/save")
+async def save_data(request: Request):
+    return {"message": "data saved"}

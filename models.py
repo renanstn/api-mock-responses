@@ -9,5 +9,6 @@ class Path(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     endpoint = Column(String)
+    method = Column(String)
     return_body = Column(JSON)
     return_header = Column(JSON)
