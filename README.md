@@ -1,5 +1,10 @@
 # api-mock-responses
 
+Utilize este pequeno APP para simular uma API fake, que retorna dados mocados
+em qualquer endpoint préviamente configurado.
+
+![printscreen](images/printscreen.png)
+
 ## Stack
 
 - [FastAPI](https://fastapi.tiangolo.com/)
