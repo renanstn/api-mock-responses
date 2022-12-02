@@ -14,20 +14,32 @@
   <div class="container">
     <h1 class="title" title-color="white">API Mock Responses</h1>
     {% for item in payload %}
-      <div class="card">
-        <div class="card-content">
+    <div class="card">
+      <div class="card-content">
+
+        <form method="POST">
+
+          <div class="field">
+            <label class="label">Method</label>
+            <div class="control">
+              <input name="method" class="input" type="text" value="{{ item.method }}">
+            </div>
+          </div>
+
           <div class="field">
             <label class="label">Endpoint</label>
             <div class="control">
-              <input class="input" type="text" value="{{ item.endpoint }}" disabled>
+              <input name="endpoint" class="input" type="text" value="{{ item.endpoint }}" readonly>
             </div>
           </div>
-          <div class="field">
-            <label class="label">Header</label>
+
+          <!-- <div class="field">
+            <label class="label">Headers</label>
             <div class="control">
               <textarea name="return_header" class="textarea">{{ item.return_header }}</textarea>
             </div>
-          </div>
+          </div> -->
+
           <div class="field">
             <label class="label">Body</label>
             <div class="control">
@@ -37,15 +49,14 @@
 
           <div class="field is-grouped">
             <div class="control">
-              <button class="button is-link">Save</button>
-            </div>
-            <div class="control">
-              <button class="button is-link is-light">Reset</button>
+              <input type="submit" class="button is-link" value="Save">
             </div>
           </div>
-        </div>
+        </form>
+
       </div>
-      <br>
+    </div>
+    <br>
     {% endfor %}
   </div>
 </body>

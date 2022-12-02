@@ -1,4 +1,6 @@
-from fastapi import FastAPI, Request
+import json
+
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -24,7 +26,15 @@ async def get_request_path(request: Request, call_next):
     Caso não exista, adiciona uma entrada no banco, para que seja possível
     preencher o restante dos dados na tela de admin.
     """
-    if request.url.path in ["/admin", "/save", "/static/css/custom.css"]:
+    exceptions_paths = [
+        "/admin",
+        "/admin/",
+        "/save",
+        "/static/css/custom.css",
+        "/static/css/bulma.min.css",
+        "/favicon.ico",
+    ]
+    if request.url.path in exceptions_paths:
         response = await call_next(request)
         return response
     else:
@@ -58,22 +68,58 @@ async def get_request_path(request: Request, call_next):
 
 @app.get("/admin", response_class=HTMLResponse)
 async def load_html(request: Request):
-    paths = db.query(models.Path).all()
+    paths = db.query(models.Path).order_by(models.Path.id.asc())
     payload = []
+    db.close()
+
     for path in paths:
         payload.append(
             {
                 "id": path.id,
+                "method": path.method,
                 "endpoint": path.endpoint,
                 "return_body": path.return_body,
                 "return_header": path.return_header,
             }
         )
+
     return templates.TemplateResponse(
         "admin.html", {"request": request, "payload": payload}
     )
 
 
-@app.post("/save")
-async def save_data(request: Request):
-    return {"message": "data saved"}
+@app.post("/admin", response_class=HTMLResponse)
+async def load_html(
+    request: Request,
+    method: str = Form(),
+    endpoint: str = Form(),
+    # return_header: str = Form(),
+    return_body: str = Form(),
+):
+    # Update data
+    db.query(models.Path).filter(models.Path.endpoint == endpoint).update({
+        "method": method,
+        # "return_header": json.loads(return_header.replace("\'", "\"")),
+        "return_body": json.loads(return_body.replace("\'", "\"")),
+    })
+    db.commit()
+
+    # Load all data and return
+    paths = db.query(models.Path).order_by(models.Path.id.asc())
+    payload = []
+    db.close()
+
+    for path in paths:
+        payload.append(
+            {
+                "id": path.id,
+                "method": path.method,
+                "endpoint": path.endpoint,
+                "return_body": path.return_body,
+                "return_header": path.return_header,
+            }
+        )
+
+    return templates.TemplateResponse(
+        "admin.html", {"request": request, "payload": payload}
+    )
