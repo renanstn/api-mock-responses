@@ -22,4 +22,4 @@ RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi
 COPY . /code/
 RUN chmod +x start.sh
-CMD ["start.sh"]
+CMD ["./start.sh"]
