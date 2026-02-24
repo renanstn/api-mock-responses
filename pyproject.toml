@@ -3,6 +3,7 @@ name = "api-mock"
 version = "0.1.0"
 description = ""
 authors = ["Renan Santana <renan_ota@hotmail.com>"]
+packages = []
 
 [tool.poetry.dependencies]
 python = "^3.9"
